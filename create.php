@@ -2,16 +2,18 @@
 	include 'auth.php';
 		
 	if ($_POST['submit'] === "OK") {
-		if ($_POST['login']) {
-			if (!$_POST['psw']) {
-				header("Location: index.php?create=errorempty3",TRUE,301);
-				exit ;
-			}
+		if (isset($_POST['login']) && isset($_POST['psw']) && isset($_POST['psw-repeat']) &&  isset($_POST['email'])) {
 			if (!(file_exists("../private")))
 				mkdir("../private", 0777, true);
 			$login = $_POST['login'];
 			$email = $_POST['email'];
 			$passwd = hash("whirlpool", $_POST['psw']);
+			$pas_2 =  hash("whirlpool", $_POST['psw-repeat']);
+			if (strlen($_POST['psw']) < 6 || ($pas_2 != $psw))
+			{
+					header("Location: index.php?create=erroroldlogin",TRUE,301);				
+					exit ;
+			}
 			$arr = unserialize(file_get_contents("../private/passwd"));
 			foreach ($arr as $inarr) {
 				if ($inarr['login'] == $login || $inarr['email'] == $email) {
@@ -23,7 +25,8 @@
 			$arr[] = $new_arr;
 			file_put_contents('../private/passwd', serialize($arr));
 			echo "OK" . PHP_EOL;
-			header("Location: index.php?create=success",TRUE,301);
+			;_SESSION['login'] = $login;
+			header("Location: index.php",TRUE,301);
 			exit ;
 		}
 		else {

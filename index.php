@@ -1,6 +1,6 @@
-<?php 
-  include'DB.php';
+<?php
   session_start();
+  include'DB.php';
  ?>
 <html>
 <head>
