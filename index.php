@@ -4,6 +4,7 @@
  ?>
 <html>
 <head>
+  <title>Camagru</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 * {
@@ -149,7 +150,7 @@ span.psw {
     background-color: #fefefe;
     margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
     border: 1px solid #888;
-    width: 80%; /* Could be more or less, depending on screen size */
+    width: 62%; /* Could be more or less, depending on screen size */
 }
 
 /* The Close Button (x) */
@@ -205,7 +206,21 @@ span.psw {
 <!-- MAIN (Center website) -->
 <div class="main">
 
-<h1 >Camagru</h1>
+<h1 >Camagru
+<?php 
+    if(isset($_SESSION['login']) && isset($_SESSION['sing-in'])  && $_SESSION['sing-in'] == "sing-in")
+      echo $_SESSION['login'];
+    else if (!isset($_SESSION['login']))
+      echo "plz1";
+    else if (!isset($_SESSION['sing-in']))
+      echo "plz 2".session_save_path();
+    else if ($_SESSION['sing-in'] != "sing-in") 
+      echo "plz 3".$_SESSION['sing-in'];
+    else 
+      echo "plz";
+?>
+  
+</h1>
 <hr>
 <div class="row">
   <div class="column">
@@ -215,7 +230,7 @@ span.psw {
     <button onclick="document.getElementById('create-form').style.display='block'" style="width:100%;"><div style="color:#984c46 " >create account</button>
   </div>
     <div class="column">
-    <button onclick="document.getElementById('001').style.display='block'" style="width:100%;"><div style="color:#984c46 " >add photo</button>
+    <button onclick="document.getElementById('upload-form').style.display='block'" style="width:100%;"><div style="color:#984c46 " >add photo</button>
   </div>
       <div class="column">
     <button onclick="document.getElementById('001').style.display='block'" style="width:100%;"><div style="color:#984c46 " >add photo</button>
@@ -350,6 +365,7 @@ span.psw {
   </form>
 </div>
 
+
 <div id="welcome-form" class="modal">
   <form class="modal-content animate" >
     <div class="container">
@@ -361,7 +377,15 @@ span.psw {
   </form>
 </div>
 
-
+<div id="upload-form" class="modal">
+    <form class="modal-content animate" action="upload.php" method="post" enctype="multipart/form-data">
+      <div class="container">
+        Select image to upload:
+        <input type="file" name="fileToUpload" id="fileToUpload"><br>
+        <input type="submit" value="Upload Image" name="submit">
+      </div>
+    </form>
+</div>
 <?php
 echo "<hr>";
 echo "<div class=\"row\">";
@@ -381,6 +405,7 @@ echo "<hr>";
 // Get the modal
     var modal01 = document.getElementById('login-modal');
     var modal02 = document.getElementById('create-form');
+    var modal03 = document.getElementById('upload-form');
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
         if (event.target == modal01) {
@@ -388,6 +413,9 @@ echo "<hr>";
         }
         else if (event.target == modal02) {
             modal02.style.display = "none";
+        }
+        else if (event.target == modal03) {
+          modal03.style.display = "none";
         }
     }
 
