@@ -29,5 +29,6 @@
 		}
 		else
 			echo "(((((";
+		header("Location: index.php?crt=0",TRUE,301);
 
 ?>

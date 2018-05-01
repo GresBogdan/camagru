@@ -210,27 +210,26 @@ span.psw {
 <?php 
     if(isset($_SESSION['login']) && isset($_SESSION['sing-in'])  && $_SESSION['sing-in'] == "sing-in")
       echo $_SESSION['login'];
-    else if (!isset($_SESSION['login']))
-      echo "plz1";
-    else if (!isset($_SESSION['sing-in']))
-      echo "plz 2".session_save_path();
-    else if ($_SESSION['sing-in'] != "sing-in") 
-      echo "plz 3".$_SESSION['sing-in'];
-    else 
-      echo "plz";
 ?>
   
 </h1>
 <hr>
 <div class="row">
   <div class="column">
-    <button onclick="document.getElementById('login-modal').style.display='block'" style="width:100%;"><dic style="color:#984c46 " >Login</dic></button>
+    <button  onclick="document.getElementById('login-modal').style.display='block'" style="width:100%; "><dic style="color:#984c46 " >Login</dic></button>
   </div>
   <div class="column">
     <button onclick="document.getElementById('create-form').style.display='block'" style="width:100%;"><div style="color:#984c46 " >create account</button>
   </div>
     <div class="column">
-    <button onclick="document.getElementById('upload-form').style.display='block'" style="width:100%;"><div style="color:#984c46 " >add photo</button>
+    <button  <?php 
+
+    if(isset($_SESSION['login']) && isset($_SESSION['sing-in'])  && $_SESSION['sing-in'] == "sing-in")
+      echo "onclick=\"document.getElementById('upload-form').style.display='block'\"";
+      else
+      echo "style =\" cursor: not-allowed;\"";
+
+    ?> style="width:100%;"><div style="color:#984c46 " >add photo</button>
   </div>
       <div class="column">
     <button onclick="document.getElementById('001').style.display='block'" style="width:100%;"><div style="color:#984c46 " >add photo</button>
@@ -316,19 +315,16 @@ span.psw {
 
 <div id="login-modal" class="modal">
   
-  <form class="modal-content animate" action="/action_page.php">
-
-
-    <div class="container">
-      <label for="uname"><b>Username</b></label>
-      <input type="text" placeholder="Enter Username" name="uname" required>
+  <form class="modal-content animate"  method="POST" action="log-in.php">
+   <div class="container">
+      <label for="login"><b>Login</b></label>
+      <input type="text" placeholder="Enter Username" name="login" required>
 
       <label for="psw"><b>Password</b></label>
       <input type="password" placeholder="Enter Password" name="psw" required>
         
-      <button type="submit">Login</button>
+      <button type="submit">sing-in</button>
     </div>
-
     <div class="container" style="background-color: #e9c97a">
             <div><span class="psw">Forgot <a href="#">password?</a></span></div>
       <button type="button" onclick="document.getElementById('login-modal').style.display='none'" class="cancelbtn">Cancel</button>
