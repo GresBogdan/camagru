@@ -22,13 +22,13 @@
 							}
 						}
 				}
-											header("Location: index.php?crt=0",TRUE,301);
+											header("Location: submit_registration.php",TRUE,301);
 								exit ;	
 
 			}			
 		}
 		else
 			echo "(((((";
-		header("Location: index.php?crt=0",TRUE,301);
+		header("Location: submit_registration.php",TRUE,301);
 
 ?>

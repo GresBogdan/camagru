@@ -172,7 +172,7 @@ span.psw {
 /* Add Zoom Animation */
 .animate {
     -webkit-animation: animatezoom 1s;
-    animation: animatezoom 1s
+    animation: animatezoom 1s;
 }
 
 @-webkit-keyframes animatezoom {
@@ -201,7 +201,7 @@ span.psw {
 
 </style>
 </head>
-<body>
+<body onload="init();">
 
 <!-- MAIN (Center website) -->
 <div class="main">
@@ -215,11 +215,16 @@ span.psw {
 </h1>
 <hr>
 <div class="row">
+  <?php  if (isset($_SESSION['login']) && isset($_SESSION['sing-in'])  && $_SESSION['sing-in'] == "sing-in") { ?>
+      <div class="column">
+    <button  onclick="document.location.href='session-clear.php'" style="width:100%; "><div  >Log out</dic></button>
+  </div> 
+<?php } else { ?>
   <div class="column">
-    <button  onclick="document.getElementById('login-modal').style.display='block'" style="width:100%; "><dic style="color:#984c46 " >Login</dic></button>
-  </div>
+    <button  onclick="document.getElementById('login-modal').style.display='block'" style="width:100%; "><div  >Login</dic></button>
+  </div> <?php } ?>
   <div class="column">
-    <button onclick="document.getElementById('create-form').style.display='block'" style="width:100%;"><div style="color:#984c46 " >create account</button>
+    <button onclick="document.getElementById('create-form').style.display='block'" style="width:100%;"><div  >create account</button>
   </div>
     <div class="column">
     <button  <?php 
@@ -229,10 +234,10 @@ span.psw {
       else
       echo "style =\" cursor: not-allowed;\"";
 
-    ?> style="width:100%;"><div style="color:#984c46 " >add photo</button>
+    ?> style="width:100%;"><div  >upload photo</button>
   </div>
       <div class="column">
-    <button onclick="document.getElementById('001').style.display='block'" style="width:100%;"><div style="color:#984c46 " >add photo</button>
+    <button onclick="document.getElementById('make-form').style.display='block'" style="width:100%;"><div  >make  photo</button>
   </div>
 </div>
 <hr>
@@ -382,6 +387,29 @@ span.psw {
       </div>
     </form>
 </div>
+
+<div id="make-form" class="modal">
+    <div class="modal-content animate">
+      <div class="container">
+                  <h1>Take a snapshot of the current video stream</h1>
+             Click on the Start WebCam button.
+               <p>
+              <button onclick="startWebcam();">Start WebCam</button>
+              <button onclick="stopWebcam();">Stop WebCam</button> 
+                 <button onclick="snapshot();">Take Snapshot</button> 
+              </p>
+              <img id="img-1" src="picture/liked.png" onclick="choos_img(this.id)">
+              <video onclick="snapshot(this);" width="80%" height="80%" id="video" autoplay></video>
+              <p>
+
+               Screenshots : <p>
+              <canvas  id="myCanvas" ></canvas>
+              <canvas id="secret-canvas" style="display: none;">  </canvas>
+              <a id="dl-btn" href="#" download="glorious_selfie.png">Save Photo</a>
+      </div>
+    </div>
+</div>
+
 <?php
 echo "<hr>";
 echo "<div class=\"row\">";
@@ -402,6 +430,8 @@ echo "<hr>";
     var modal01 = document.getElementById('login-modal');
     var modal02 = document.getElementById('create-form');
     var modal03 = document.getElementById('upload-form');
+    var modal04 = document.getElementById('make-form');
+    var img = null;
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
         if (event.target == modal01) {
@@ -413,6 +443,12 @@ echo "<hr>";
         else if (event.target == modal03) {
           modal03.style.display = "none";
         }
+        else if (event.target == modal04) {
+          modal04.style.display = "none";
+        }
+    }
+    function choos_img(need_id) {
+      img = document.getElementById(need_id);
     }
 
     function changeImage(need_id) {
@@ -456,6 +492,95 @@ echo "<hr>";
       xhttp.open("GET", "registration.php?do=r&login="+need_id, true);
       xhttp.send();
     }
+
+
+
+
+
+
+
+
+
+
+
+     navigator.getUserMedia = ( navigator.getUserMedia ||
+                             navigator.webkitGetUserMedia ||
+                             navigator.mozGetUserMedia ||
+                             navigator.msGetUserMedia);
+
+      var video;
+      var webcamStream;
+
+      function startWebcam() {
+        if (navigator.getUserMedia) {
+           navigator.getUserMedia (
+
+              // constraints
+              {
+                 video: true,
+                 audio: false
+              },
+
+              // successCallback
+              function(localMediaStream) {
+                  video = document.querySelector('video');
+                 video.src = window.URL.createObjectURL(localMediaStream);
+                 webcamStream = localMediaStream;
+              },
+
+              // errorCallback
+              function(err) {
+                 console.log("The following error occured: " + err);
+              }
+           );
+        } else {
+           console.log("getUserMedia not supported");
+        }  
+      }
+
+      function stopWebcam() {
+          webcamStream.stop();
+      }
+      //---------------------
+      // TAKE A SNAPSHOT CODE
+      //---------------------
+      var canvas, ctx, ctx2, canvas_upload;
+
+      function init() {
+        // Get the canvas and obtain a context for
+        // drawing in it
+        canvas = document.getElementById("myCanvas");
+        canvas_upload = document.getElementById("secret-canvas");
+        ctx = canvas.getContext('2d');
+        ctx2 = canvas_upload.getContext('2d');
+      }
+
+      function snapshot() {
+         // Draws current image from the video element into the canvas
+        ctx.drawImage(video, 0,0, canvas.width, canvas.height);
+                          video = document.querySelector('video');
+        canvas_upload.width = video.width * 10;
+        canvas_upload.height = video.height * 10;
+        alert(canvas_upload.width + "   "  + canvas_upload.height);
+        ctx2.drawImage(video, 0,0, canvas_upload.width, canvas_upload.height);
+                if (img != null)
+        {
+          ctx.drawImage(img, 0,0, canvas.width/4, canvas.height/4);
+          ctx2.drawImage(img, 0,0, canvas_upload.width/4, canvas_upload.height/4);
+        }
+       var imageDataURL = canvas_upload.toDataURL('image/png');
+
+
+
+ // Устанавливаем значение атрибуту href.
+
+    document.querySelector('#dl-btn').href = imageDataURL;
+
+
+      }
+
+
+
 </script>
 </body>
 </html>
