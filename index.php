@@ -153,6 +153,13 @@ span.psw {
     width: 62%; /* Could be more or less, depending on screen size */
 }
 
+.modal-content-2 {
+    background-color: #fefefe;
+    margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+    border: 1px solid #888;
+    width: 95%; /* Could be more or less, depending on screen size */
+}
+
 /* The Close Button (x) */
 .close {
     position: absolute;
@@ -196,8 +203,43 @@ span.psw {
     }
 }
 
+  #myCanvas {
+    width: 80%;
+    margin-right: 20%;
+  }
 
 
+#video {
+  width: 100%;
+}
+#column-1 {
+  width: 10%;
+  float: left;
+  min-height: 100%;
+      position: relative;
+  background-color: #e9c97a;  
+}
+
+#column-2 {
+  width: 60%;
+  min-height: 100%;
+  float: left;
+  background-color: #e9c97a;
+      position: relative;
+}
+
+#column-3 {
+  width: 30%;
+  min-height: 100%;
+  float: left;
+  background-color: #e9c97a;
+      position: relative;
+}
+
+.icona4ki {
+  width: 80%;
+  margin-right: 10%;
+}
 
 </style>
 </head>
@@ -237,10 +279,24 @@ span.psw {
     ?> style="width:100%;"><div  >upload photo</button>
   </div>
       <div class="column">
-    <button onclick="document.getElementById('make-form').style.display='block'" style="width:100%;"><div  >make  photo</button>
+    <button 
+<?php 
+
+    if(isset($_SESSION['login']) && isset($_SESSION['sing-in'])  && $_SESSION['sing-in'] == "sing-in")
+      echo "onclick=\"document.getElementById('make-form').style.display='block'\"";
+      else
+      echo "style =\" cursor: not-allowed;\"";
+
+    ?>
+     style="width:100%;"><div  >make  photo</button>
   </div>
 </div>
 <hr>
+
+
+
+
+
 
 
 <div class="row">
@@ -317,7 +373,9 @@ span.psw {
 </div>
 
 
-
+<?php 
+    if(!isset($_SESSION['login']) || !isset($_SESSION['sing-in'])  || $_SESSION['sing-in'] != "sing-in") {
+?>
 <div id="login-modal" class="modal">
   
   <form class="modal-content animate"  method="POST" action="log-in.php">
@@ -336,7 +394,7 @@ span.psw {
     </div>
   </form>
 </div>
-
+<?php } ?>
 <!-- END MAIN -->
 </div>
 
@@ -378,38 +436,83 @@ span.psw {
   </form>
 </div>
 
+<?php 
+    if(isset($_SESSION['login']) && isset($_SESSION['sing-in'])  && $_SESSION['sing-in'] == "sing-in") {
+?>
 <div id="upload-form" class="modal">
-    <form class="modal-content animate" action="upload.php" method="post" enctype="multipart/form-data">
+    <form class="modal-content-2 animate" action="upload.php" method="post" enctype="multipart/form-data">
       <div class="container">
         Select image to upload:
         <input type="file" name="fileToUpload" id="fileToUpload"><br>
         <input type="submit" value="Upload Image" name="submit">
+        <div>
+            <canvas width="400" height="300" id="upload-canvas"/>
+        </div>
       </div>
     </form>
 </div>
+<?php } ?>
 
+
+<?php 
+    if(isset($_SESSION['login']) && isset($_SESSION['sing-in'])  && $_SESSION['sing-in'] == "sing-in") {
+?>
 <div id="make-form" class="modal">
-    <div class="modal-content animate">
+    <div class="modal-content-2 animate">
       <div class="container">
-                  <h1>Take a snapshot of the current video stream</h1>
-             Click on the Start WebCam button.
-               <p>
-              <button onclick="startWebcam();">Start WebCam</button>
+                <div class="row">
+                  <div class="column">
+                                 <button onclick="startWebcam();">Start WebCam</button>
+                  </div>
+                  <div class="column">
+              <button onclick="stopWebcam();">Stop WebCam</button>                     
+                  </div>
+                  <div class="column">
+                    <button onclick="snapshot();">Take Snapshot</button> 
+                  </div>
+                  <div class="column">
+                      <button onclick="img = null"> no add on foto</button>
+                  </div>
+                </div>
+<!--               <button onclick="startWebcam();">Start WebCam</button>
               <button onclick="stopWebcam();">Stop WebCam</button> 
-                 <button onclick="snapshot();">Take Snapshot</button> 
-              </p>
+                 <button onclick="snapshot();">Take Snapshot</button>  -->
+
+
+
+                <div id="column-1">
+
+
+                  <img class="icona4ki" id="img-01" src="picture/01.png" onclick="choos_img(this.id)">
+                  <img class="icona4ki" id="img-1" src="picture/1.png" onclick="choos_img(this.id)">
+                  <img class="icona4ki" id="img-2" src="picture/2.png" onclick="choos_img(this.id)">
+                  <img class="icona4ki" id="img-3" src="picture/3.png" onclick="choos_img(this.id)">
+                  <img class="icona4ki" id="img-4" src="picture/4.png" onclick="choos_img(this.id)">
+
+                </div>
+                <div id="column-2">
+                  <video onclick="snapshot(this);"  id="video" autoplay></video>
+                </div>
+                <div id="column-3">
+                  <canvas  id="myCanvas" ></canvas>
+                </div>
+
+
+
+
+<!--               </p>
               <img id="img-1" src="picture/liked.png" onclick="choos_img(this.id)">
-              <video onclick="snapshot(this);" width="80%" height="80%" id="video" autoplay></video>
+              <video onclick="snapshot(this);"  id="video" autoplay></video>
               <p>
 
                Screenshots : <p>
-              <canvas  id="myCanvas" ></canvas>
-              <canvas id="secret-canvas" style="display: none;">  </canvas>
+              <canvas  id="myCanvas" ></canvas> -->
+              <canvas id="secret-canvas" style="display: none;"> <p> </canvas>
               <a id="dl-btn" href="#" download="glorious_selfie.png">Save Photo</a>
       </div>
     </div>
 </div>
-
+<?php } ?>
 <?php
 echo "<hr>";
 echo "<div class=\"row\">";
@@ -553,15 +656,15 @@ echo "<hr>";
         canvas_upload = document.getElementById("secret-canvas");
         ctx = canvas.getContext('2d');
         ctx2 = canvas_upload.getContext('2d');
+        var input = document.getElementById('fileToUpload');
+        input.addEventListener('change', handleFiles, false);
       }
-
       function snapshot() {
          // Draws current image from the video element into the canvas
         ctx.drawImage(video, 0,0, canvas.width, canvas.height);
                           video = document.querySelector('video');
-        canvas_upload.width = video.width * 10;
-        canvas_upload.height = video.height * 10;
-        alert(canvas_upload.width + "   "  + canvas_upload.height);
+        canvas_upload.width = 780;
+        canvas_upload.height = 600;
         ctx2.drawImage(video, 0,0, canvas_upload.width, canvas_upload.height);
                 if (img != null)
         {
@@ -578,6 +681,30 @@ echo "<hr>";
 
 
       }
+
+
+function handleFiles(e) {
+    var ctx = document.getElementById('upload-canvas').getContext('2d');
+    var reader  = new FileReader();
+    var file = e.target.files[0];
+    // load to image to get it's width/height
+    var img = new Image();
+    img.onload = function() {
+        // scale canvas to image
+        ctx.canvas.width = img.width;
+        ctx.canvas.height = img.height;
+        // draw image
+        ctx.drawImage(img, 0, 0
+            , ctx.canvas.width, ctx.canvas.height
+        );
+    }
+    // this is to setup loading the image
+    reader.onloadend = function () {
+        img.src = reader.result;
+    }
+    // this is to read the file
+    reader.readAsDataURL(file);
+}
 
 
 
